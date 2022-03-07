@@ -155,7 +155,7 @@ def dashboard():
     st.markdown('''
     - **Facility:** Parabolic-Trough Collector (PTC) Solar Thermal Power Plant
         - **Power:** 50 MW
-        - **Thermal storage: ** 8 hours
+        - **Thermal storage:** 8 hours
     - **Data:** Typical Meteorological Year (TMY)
         - **Location:** Almería, Spain
         - **Source:** [PVGIS](https://ec.europa.eu/jrc/en/pvgis)
