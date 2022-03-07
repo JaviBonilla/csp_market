@@ -51,7 +51,7 @@ def data_filename(year, month, day, su=1):
 
 
 def dataframe_file(year):
-    return f'../dataframes/market_{year}.df'
+    return f'./dataframes/market_{year}.df'
 
 
 def format_number(value, decimals=2):
