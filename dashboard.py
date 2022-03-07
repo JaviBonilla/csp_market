@@ -12,8 +12,8 @@ default_year = 2
 figure_font_size = 16
 
 # CSV files
-csv_ns = '../csv/csp_data_NS.csv'
-csv_ew = '../csv/csp_data_EW.csv'
+csv_ns = './csv/csp_data_NS.csv'
+csv_ew = './csv/csp_data_EW.csv'
 
 # PTC plant power
 ptc_installed_power = 50
