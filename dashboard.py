@@ -18,6 +18,14 @@ csv_ew = './csv/csp_data_EW.csv'
 # PTC plant power
 ptc_installed_power = 50
 
+# Hover configuration
+hover_mode = 'closest'
+hover_label = dict(bgcolor="black", font_size=13.5)
+solar_hover_template = '<br><b>Date</b>: %{x}<br>' + '<b>Production</b>: %{y:,.2f} MW' + '<extra></extra>'
+turbine_hover_template = '<br><b>Date</b>: %{x}<br>' + '<b>Production</b>: %{y:,.2f} MW' + '<extra></extra>'
+price_hover_template = '<br><b>Date</b>: %{x}<br>' + '<b>Price</b>: %{y:,.2f} €/MWh' + '<extra></extra>'
+
+
 
 @st.cache
 def load_dataframe(year):
@@ -140,12 +148,14 @@ def dashboard():
     st.subheader('')
     st.header('Spanish Power Market Auction')
     price = go.Scatter(x=df[common.HEADER_DATE], y=df[common.HEADER_VALUE], name='Price',
-                       mode='lines', line=dict(width=2, color=common.COLOR_PRICE))
+                       mode='lines', line=dict(width=2, color=common.COLOR_PRICE), fill='tozeroy',
+                       fillcolor=common.COLOR_PRICE,
+                       hovertemplate=price_hover_template)
     layout_price = go.Layout(xaxis=dict(title=''),
                              yaxis=dict(title='Price', tickformat='0,000.00f', hoverformat=',.2f',
                                         ticksuffix=' €/MWh', separatethousands=True))
     fig_price = go.Figure(data=[price], layout=layout_price)
-    fig_price.update_layout(font_size=figure_font_size)
+    fig_price.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     st.plotly_chart(fig_price, use_container_width=True)
     st.markdown('Data from [OMIE]'
                 '(https://www.omie.es/es/file-access-list#Mercado%20Diario1.%20Precios?parent=Mercado%20Diario)')
@@ -173,23 +183,27 @@ def dashboard():
     # Solar production
     col_ns.subheader('Solar field net production')
     csp_ns = go.Scatter(x=df_ns[common.HEADER_CSV_DATE], y=df_ns[common.HEADER_CSV_SOLAR], name='Solar field',
-                        mode='lines', line=dict(width=2, color=common.COLOR_SOLAR))
+                        mode='lines', line=dict(width=2, color=common.COLOR_SOLAR), fill='tozeroy',
+                        fillcolor=common.COLOR_SOLAR,
+                        hovertemplate=solar_hover_template)
     layout_csp_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Solar field net power', tickformat='0,000.00f',
                                                                hoverformat=',.2f', ticksuffix=' MW',
                                                                separatethousands=True))
     fig_csp_ns = go.Figure(data=[csp_ns], layout=layout_csp_ns)
-    fig_csp_ns.update_layout(font_size=figure_font_size)
+    fig_csp_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_csp_ns, use_container_width=True)
 
     # Turbine production
     col_ns.subheader('Turbine electric power')
     power_ns = go.Scatter(x=df_ns[common.HEADER_CSV_DATE], y=df_ns[common.HEADER_CSV_TURBINE], name='Turbine',
-                          mode='lines', line=dict(width=2, color=common.COLOR_TURBINE))
+                          mode='lines', line=dict(width=2, color=common.COLOR_TURBINE), fill='tozeroy',
+                          fillcolor=common.COLOR_TURBINE,
+                          hovertemplate=turbine_hover_template)
     layout_power_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Turbine power', tickformat='0,000.00f',
                                                                  hoverformat=',.2f', ticksuffix=' MW',
                                                                  separatethousands=True))
     fig_power_ns = go.Figure(data=[power_ns], layout=layout_power_ns)
-    fig_power_ns.update_layout(font_size=figure_font_size)
+    fig_power_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_power_ns, use_container_width=True)
     col_ns.markdown('Equivalent hours: **'
                     f'{common.format_unit(df_ns[common.HEADER_CSV_TURBINE].sum()/ptc_installed_power, unit="h")}**')
@@ -198,12 +212,13 @@ def dashboard():
     col_ns.subheader('Earnings')
     earnings_ns = df_ns[common.HEADER_CSV_TURBINE] * df[common.HEADER_VALUE]
     power_ns = go.Scatter(x=df_ns[common.HEADER_CSV_DATE], y=earnings_ns,
-                          name='Earnings', mode='lines', line=dict(width=2, color=common.COLOR_PRICE))
+                          name='Earnings', mode='lines', line=dict(width=2, color=common.COLOR_PRICE), fill='tozeroy',
+                          fillcolor=common.COLOR_PRICE, hovertemplate=price_hover_template)
     layout_earnings_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Earnings', tickformat='0,000.00f',
                                                                     hoverformat=',.2f', ticksuffix=' €',
                                                                     separatethousands=True))
     fig_power_ns = go.Figure(data=[power_ns], layout=layout_earnings_ns)
-    fig_power_ns.update_layout(font_size=figure_font_size)
+    fig_power_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_power_ns, use_container_width=True)
     col_ns.markdown(f'Total earnings: **{common.format_unit(earnings_ns.sum())}**')
 
@@ -216,17 +231,20 @@ def dashboard():
     # Solar production
     col_ew.subheader('Solar field net production')
     csp_ew = go.Scatter(x=df_ew[common.HEADER_CSV_DATE], y=df_ew[common.HEADER_CSV_SOLAR], name='Solar field',
-                        mode='lines', line=dict(width=2, color=common.COLOR_SOLAR))
+                        mode='lines', line=dict(width=2, color=common.COLOR_SOLAR), fill='tozeroy',
+                        fillcolor=common.COLOR_SOLAR,
+                        hovertemplate=solar_hover_template)
     fig_csp_ew = go.Figure(data=[csp_ew], layout=layout_csp_ns)
-    fig_csp_ew.update_layout(font_size=figure_font_size)
+    fig_csp_ew.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ew.plotly_chart(fig_csp_ew, use_container_width=True)
 
     # Turbine production
     col_ew.subheader('Turbine electric power')
     power_ew = go.Scatter(x=df_ew[common.HEADER_CSV_DATE], y=df_ew[common.HEADER_CSV_TURBINE], name='Turbine',
-                          mode='lines', line=dict(width=2, color=common.COLOR_TURBINE))
+                          mode='lines', line=dict(width=2, color=common.COLOR_TURBINE), fill='tozeroy',
+                          fillcolor=common.COLOR_TURBINE, hovertemplate=turbine_hover_template)
     fig_power_ew = go.Figure(data=[power_ew], layout=layout_power_ns)
-    fig_power_ew.update_layout(font_size=figure_font_size)
+    fig_power_ew.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ew.plotly_chart(fig_power_ew, use_container_width=True)
     col_ew.markdown('Equivalent hours: **'
                 f'{common.format_unit(df_ew[common.HEADER_CSV_TURBINE].sum()/ptc_installed_power, unit="h")}**')
@@ -235,9 +253,11 @@ def dashboard():
     col_ew.subheader('Earnings')
     earnings_ew = df_ew[common.HEADER_CSV_TURBINE] * df[common.HEADER_VALUE]
     power_ew = go.Scatter(x=df_ew[common.HEADER_CSV_DATE], y=earnings_ew,
-                          name='Earnings', mode='lines', line=dict(width=2, color=common.COLOR_PRICE))
+                          name='Earnings', mode='lines', line=dict(width=2, color=common.COLOR_PRICE), fill='tozeroy',
+                          fillcolor=common.COLOR_PRICE,
+                          hovertemplate=price_hover_template)
     fig_power_ns = go.Figure(data=[power_ew], layout=layout_earnings_ns)
-    fig_power_ns.update_layout(font_size=figure_font_size)
+    fig_power_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ew.plotly_chart(fig_power_ns, use_container_width=True)
     col_ew.markdown(f'Total earnings: **{common.format_unit(earnings_ew.sum())}**')
 
