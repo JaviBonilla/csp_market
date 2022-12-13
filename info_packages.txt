@@ -1,0 +1,2 @@
+charset-normalizer  2.1.1
+protobuf            3.20.3
