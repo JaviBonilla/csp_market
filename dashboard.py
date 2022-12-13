@@ -103,7 +103,7 @@ def dashboard():
 
     # Side bar
     st.sidebar.markdown('## Year')
-    year = st.sidebar.radio('', years, index=default_year)
+    year = st.sidebar.radio(' ', years, index=default_year)
     st.sidebar.markdown('## Sections')
     st.sidebar.markdown(common.styled_link('Spanish Power Market Auction', '#spanish-power-market-auction'),
                         unsafe_allow_html=True)
@@ -324,10 +324,10 @@ def dashboard():
         ]
     }
     df_comp = pd.DataFrame(data, index=['North-south', 'East-west'])
-    col_comp1.dataframe(df_comp.transpose().style.apply(df_style, axis=1), height=425)
+    col_comp1.dataframe(df_comp.transpose().style.apply(df_style, axis=1), height=529)
 
     # Comparison
-    col_comp2.subheader('Earning comparison per month')
+    col_comp2.subheader('Earnings comparison per month')
     data = {
         'Jan': [
             common.comparison_datasets(df_ns, df, year, 1, 1),
@@ -387,7 +387,7 @@ def dashboard():
         ]
     }
     df_comp = pd.DataFrame(data, index=['North-south', 'East-west'])
-    col_comp2.dataframe(df_comp.transpose().style.apply(df_style, axis=1), height=425)
+    col_comp2.dataframe(df_comp.transpose().style.apply(df_style, axis=1), height=529)
 
 
 if __name__ == '__main__':
