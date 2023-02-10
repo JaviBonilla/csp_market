@@ -26,8 +26,7 @@ turbine_hover_template = '<br><b>Date</b>: %{x}<br>' + '<b>Production</b>: %{y:,
 price_hover_template = '<br><b>Date</b>: %{x}<br>' + '<b>Price</b>: %{y:,.2f} €/MWh' + '<extra></extra>'
 
 
-
-@st.cache
+@st.cache_data
 def load_dataframe(year):
     # Load from file
     df = pd.read_pickle(common.dataframe_file(year))
@@ -153,7 +152,9 @@ def dashboard():
                        hovertemplate=price_hover_template)
     layout_price = go.Layout(xaxis=dict(title=''),
                              yaxis=dict(title='Price', tickformat='0,000.00f', hoverformat=',.2f',
-                                        ticksuffix=' €/MWh', separatethousands=True))
+                                        ticksuffix=' €/MWh', separatethousands=True),
+                             hoverlabel=dict(font=dict(color='white'))
+                             )
     fig_price = go.Figure(data=[price], layout=layout_price)
     fig_price.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     st.plotly_chart(fig_price, use_container_width=True)
@@ -188,7 +189,8 @@ def dashboard():
                         hovertemplate=solar_hover_template)
     layout_csp_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Solar field net power', tickformat='0,000.00f',
                                                                hoverformat=',.2f', ticksuffix=' MW',
-                                                               separatethousands=True))
+                                                               separatethousands=True),
+                              hoverlabel=dict(font=dict(color='white')))
     fig_csp_ns = go.Figure(data=[csp_ns], layout=layout_csp_ns)
     fig_csp_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_csp_ns, use_container_width=True)
@@ -201,7 +203,8 @@ def dashboard():
                           hovertemplate=turbine_hover_template)
     layout_power_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Turbine power', tickformat='0,000.00f',
                                                                  hoverformat=',.2f', ticksuffix=' MW',
-                                                                 separatethousands=True))
+                                                                 separatethousands=True),
+                                hoverlabel=dict(font=dict(color='white')))
     fig_power_ns = go.Figure(data=[power_ns], layout=layout_power_ns)
     fig_power_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_power_ns, use_container_width=True)
@@ -216,7 +219,8 @@ def dashboard():
                           fillcolor=common.COLOR_PRICE, hovertemplate=price_hover_template)
     layout_earnings_ns = go.Layout(xaxis=dict(title=''), yaxis=dict(title='Earnings', tickformat='0,000.00f',
                                                                     hoverformat=',.2f', ticksuffix=' €',
-                                                                    separatethousands=True))
+                                                                    separatethousands=True),
+                                   hoverlabel=dict(font=dict(color='white')))
     fig_power_ns = go.Figure(data=[power_ns], layout=layout_earnings_ns)
     fig_power_ns.update_layout(font_size=figure_font_size, hovermode=hover_mode,  hoverlabel=hover_label)
     col_ns.plotly_chart(fig_power_ns, use_container_width=True)
